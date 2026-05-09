@@ -187,7 +187,49 @@ namespace LibraryManagementSystem
             return rows;
         }
 
+        public DataTable GetReservationsForUser(int userId)
+        {
+            string query =
+                "SELECT B.Title, BC.CopyID, R.ReservationDate, R.Status " +
+                "FROM RESERVATION R " +
+                "JOIN BOOK_COPIES BC ON R.CopyID = BC.CopyID " +
+                "JOIN BOOKS B ON BC.BookID = B.BookID " +
+                "WHERE R.UserID = " + userId + " " +
+                "ORDER BY R.ReservationDate DESC;";
 
+            return dbMan.ExecuteReader(query);
+        }
+
+
+
+        public DataTable GetFinesForUser(int userId)
+        {
+            string query =
+                "SELECT B.Title, Br.BorrowDate, Br.DueDate, Br.ReturnDate, " +
+                "       F.FineID, F.Amount, F.Status " +
+                "FROM FINES F " +
+                "JOIN BORROWING Br ON F.BorrowID = Br.BorrowID " +
+                "JOIN BOOK_COPIES BC ON Br.CopyID = BC.CopyID " +
+                "JOIN BOOKS B ON BC.BookID = B.BookID " +
+                "WHERE Br.UserID = " + userId + " " +
+                "ORDER BY Br.BorrowDate DESC;";
+
+            return dbMan.ExecuteReader(query);
+        }
+
+
+        public DataTable GetNotificationsForUser(int userId)
+        {
+            string query =
+                "SELECT NotificationID, Message, CreatedAt, IsRead " +
+                "FROM NOTIFICATIONS " +
+                "WHERE UserID = " + userId + " " +
+                "ORDER BY CreatedAt DESC;";
+
+            return dbMan.ExecuteReader(query);
+        }
+
+       
 
         ////////////////////////////////////////////////////////
         ////add more methods here:

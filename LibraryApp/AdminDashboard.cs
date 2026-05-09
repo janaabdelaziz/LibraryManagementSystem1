@@ -12,8 +12,10 @@ namespace LibraryApp
 {
     public partial class AdminDashboard : Form
     {
-        public AdminDashboard()
+        private int _currentUserId;
+        public AdminDashboard(int userId)
         {
+            _currentUserId = userId;
             InitializeComponent();
         }
 

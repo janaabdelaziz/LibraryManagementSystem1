@@ -31,6 +31,9 @@
             this.btnCountUsers = new System.Windows.Forms.Button();
             this.btnOpenBookSearch = new System.Windows.Forms.Button();
             this.btnMyHistory = new System.Windows.Forms.Button();
+            this.btnMyReservations = new System.Windows.Forms.Button();
+            this.btnMyFines = new System.Windows.Forms.Button();
+            this.btnNotifications = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnCountUsers
@@ -63,11 +66,44 @@
             this.btnMyHistory.UseVisualStyleBackColor = true;
             this.btnMyHistory.Click += new System.EventHandler(this.btnMyHistory_Click);
             // 
+            // btnMyReservations
+            // 
+            this.btnMyReservations.Location = new System.Drawing.Point(47, 211);
+            this.btnMyReservations.Name = "btnMyReservations";
+            this.btnMyReservations.Size = new System.Drawing.Size(145, 62);
+            this.btnMyReservations.TabIndex = 3;
+            this.btnMyReservations.Text = "my reservations";
+            this.btnMyReservations.UseVisualStyleBackColor = true;
+            this.btnMyReservations.Click += new System.EventHandler(this.btnMyReservations_Click);
+            // 
+            // btnMyFines
+            // 
+            this.btnMyFines.Location = new System.Drawing.Point(448, 209);
+            this.btnMyFines.Name = "btnMyFines";
+            this.btnMyFines.Size = new System.Drawing.Size(136, 64);
+            this.btnMyFines.TabIndex = 4;
+            this.btnMyFines.Text = "my fines";
+            this.btnMyFines.UseVisualStyleBackColor = true;
+            this.btnMyFines.Click += new System.EventHandler(this.btnMyFines_Click);
+            // 
+            // btnNotifications
+            // 
+            this.btnNotifications.Location = new System.Drawing.Point(252, 319);
+            this.btnNotifications.Name = "btnNotifications";
+            this.btnNotifications.Size = new System.Drawing.Size(145, 64);
+            this.btnNotifications.TabIndex = 5;
+            this.btnNotifications.Text = "notifications";
+            this.btnNotifications.UseVisualStyleBackColor = true;
+            this.btnNotifications.Click += new System.EventHandler(this.btnNotifications_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(675, 450);
+            this.Controls.Add(this.btnNotifications);
+            this.Controls.Add(this.btnMyFines);
+            this.Controls.Add(this.btnMyReservations);
             this.Controls.Add(this.btnMyHistory);
             this.Controls.Add(this.btnOpenBookSearch);
             this.Controls.Add(this.btnCountUsers);
@@ -83,6 +119,9 @@
         private System.Windows.Forms.Button btnCountUsers;
         private System.Windows.Forms.Button btnOpenBookSearch;
         private System.Windows.Forms.Button btnMyHistory;
+        private System.Windows.Forms.Button btnMyReservations;
+        private System.Windows.Forms.Button btnMyFines;
+        private System.Windows.Forms.Button btnNotifications;
     }
 }
 

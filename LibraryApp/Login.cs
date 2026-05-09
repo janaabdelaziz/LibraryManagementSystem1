@@ -26,6 +26,7 @@ namespace LibraryApp
 
             if (dt.Rows.Count == 0)
             {
+
                 MessageBox.Show("Wrong username or password");
                 return;
             }
@@ -38,30 +39,31 @@ namespace LibraryApp
                 return;
             }
 
+            int userId = Convert.ToInt32(dt.Rows[0]["UserID"]);
+            int roleId = Convert.ToInt32(dt.Rows[0]["RoleID"]);
+
             string role = dt.Rows[0]["RoleID"].ToString();
 
-            if (role == "1")
+            //////////roles
+            if (roleId == 1)
             {
-                AdminDashboard form = new AdminDashboard();
+                AdminDashboard form = new AdminDashboard(userId);
                 form.Show();
             }
-            else if (role == "3")
+            else if (roleId == 3 || roleId == 4)
             {
-                Form1 form = new Form1();
+                Form1 form = new Form1(userId, roleId);
                 form.Show();
             }
-            else if (role == "4")
+            else if (roleId == 2)
             {
-                Form1 form = new Form1();
-                form.Show();
-            }
-            else if (role == "2")
-            {
-                LibrarianDashboard form = new LibrarianDashboard();
+                LibrarianDashboard form = new LibrarianDashboard(userId);
                 form.Show();
             }
 
-                //this.Hide();
+
+
+            //this.Hide();
         }
 
         private void signupbtn_Click(object sender, EventArgs e)
@@ -81,6 +83,18 @@ namespace LibraryApp
         {
             GuestRegisterForm f = new GuestRegisterForm();
             f.Show();
+        }
+
+        private void btnGuestSearch_Click(object sender, EventArgs e)
+        {
+            int guestUserId = 0;   // or any value you use to mean 'guest'
+            BookSearchForm f = new BookSearchForm(guestUserId);
+            f.Show();
+        }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -12,9 +12,16 @@ namespace LibraryApp
 {
     public partial class LibrarianDashboard : Form
     {
-        public LibrarianDashboard()
+        private int _currentUserId;
+        public LibrarianDashboard(int userId)
         {
+            _currentUserId = userId;
             InitializeComponent();
+        }
+
+        private void LibrarianDashboard_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

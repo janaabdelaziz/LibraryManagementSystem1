@@ -44,6 +44,7 @@
             this.txtTitleFilter.Name = "txtTitleFilter";
             this.txtTitleFilter.Size = new System.Drawing.Size(280, 22);
             this.txtTitleFilter.TabIndex = 0;
+            this.txtTitleFilter.TextChanged += new System.EventHandler(this.txtTitleFilter_TextChanged);
             // 
             // btnSearch
             // 

@@ -16,9 +16,13 @@ namespace LibraryApp
     
     public partial class Form1 : Form
     {
+        private int _currentUserId;
+        private int _roleId;
         Controller controllerObj;
-        public Form1()
+        public Form1(int userId, int roleId)
         {
+            _currentUserId = userId;
+            _roleId = roleId;
             InitializeComponent();
             controllerObj = new Controller();
         }
@@ -31,24 +35,37 @@ namespace LibraryApp
 
         private void btnOpenBookSearch_Click(object sender, EventArgs e)
         {
-            int currentUserId = 1;  // use a real existing UserID for now
-            BookSearchForm f = new BookSearchForm(currentUserId);
+            BookSearchForm f = new BookSearchForm(_currentUserId);
             f.Show();
         }
 
         private void btnMyHistory_Click(object sender, EventArgs e)
         {
-            // TODO: replace 1 with an actual UserID from your USERS table
-            int currentUserId = 1;
-
-            BorrowingHistoryForm f = new BorrowingHistoryForm(currentUserId);
+            BorrowingHistoryForm f = new BorrowingHistoryForm(_currentUserId);
             f.Show();
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnMyReservations_Click(object sender, EventArgs e)
+        {
+            MyReservationsForm f = new MyReservationsForm(_currentUserId);
+            f.Show();
+        }
+
+        private void btnMyFines_Click(object sender, EventArgs e)
+        {
+            MyFinesForm f = new MyFinesForm(_currentUserId);
+            f.Show();
+        }
+
+        private void btnNotifications_Click(object sender, EventArgs e)
+        {
+            NotificationsForm f = new NotificationsForm(_currentUserId);
+            f.Show();
         }
     }
 }

@@ -115,5 +115,10 @@ namespace LibraryApp
                 MessageBox.Show("Reservation failed.");
             }
         }
+
+        private void txtTitleFilter_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
