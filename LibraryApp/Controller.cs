@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibraryManagementSystem;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -6,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace LibraryManagementSystem
 {
@@ -229,11 +231,174 @@ namespace LibraryManagementSystem
             return dbMan.ExecuteReader(query);
         }
 
-       
+
 
         ////////////////////////////////////////////////////////
         ////add more methods here:
+        public int InsertNewBook(string title, string isbn, int publisherID,
+                               int categoryID, int publicationYear,
+                               string shelfLocation = "General", int numberOfCopies = 1)
+        {
+            try
+            {
+                // Step 1: Insert the Book
+                string insertBookQuery = $@"
+                    INSERT INTO BOOKS (Title, ISBN, PublisherID, CategoryID, PublicationYear)
+                    VALUES ('{title}', '{isbn}', {publisherID}, {categoryID}, {publicationYear});
+
+                    SELECT SCOPE_IDENTITY();";
+
+                object result = dbMan.ExecuteScalar(insertBookQuery);
+
+                if (result == null)
+                    return 0;
+
+                int newBookID = Convert.ToInt32(result);
+
+                // Step 2: Insert Book Copies
+                for (int i = 1; i <= numberOfCopies; i++)
+                {
+                    string insertCopyQuery = $@"
+                        INSERT INTO BOOK_COPIES (BookID, Status, ShelfLocation)
+                        VALUES ({newBookID}, 'Available', '{shelfLocation}');";
+
+                    dbMan.ExecuteNonQuery(insertCopyQuery);
+                }
+
+                return newBookID;   // Return the new BookID if successful
+            }
+            catch (Exception ex)
+            {
+               
+                return -1; // -1 means error
+            }
+        }
+
+        // Overloaded version that also accepts multiple authors (comma separated)
+        public int InsertNewBook(string title, string isbn, int publisherID,
+                               int categoryID, int publicationYear,
+                               string shelfLocation, int numberOfCopies,
+                               string authorIDs)   // e.g., "1,3,5"
+        {
+            try
+            {
+                // Step 1: Insert Book and get ID
+                string insertBookQuery = $@"
+                    INSERT INTO BOOKS (Title, ISBN, PublisherID, CategoryID, PublicationYear)
+                    VALUES ('{title}', '{isbn}', {publisherID}, {categoryID}, {publicationYear});
+
+                    SELECT SCOPE_IDENTITY();";
+
+                object result = dbMan.ExecuteScalar(insertBookQuery);
+
+                if (result == null) return 0;
+
+                int newBookID = Convert.ToInt32(result);
+
+                // Step 2: Insert Book Copies
+                for (int i = 1; i <= numberOfCopies; i++)
+                {
+                    string insertCopyQuery = $@"
+                        INSERT INTO BOOK_COPIES (BookID, Status, ShelfLocation)
+                        VALUES ({newBookID}, 'Available', '{shelfLocation}');";
+
+                    dbMan.ExecuteNonQuery(insertCopyQuery);
+                }
+
+                // Step 3: Insert Book Authors (if provided)
+                if (!string.IsNullOrWhiteSpace(authorIDs))
+                {
+                    string[] authors = authorIDs.Split(',');
+                    foreach (string aid in authors)
+                    {
+                        if (int.TryParse(aid.Trim(), out int authorID))
+                        {
+                            string insertAuthorQuery = $@"
+                                INSERT INTO BOOK_AUTHOR (BookID, AuthorID)
+                                VALUES ({newBookID}, {authorID});";
+
+                            dbMan.ExecuteNonQuery(insertAuthorQuery);
+                        }
+                    }
+                }
+
+                return newBookID;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+        }
+
+        // ... add more methods below ...
+        public int ReturnBook(int borrowId, int copyId)
+        {
+            try
+            {
+                DateTime returnDate = DateTime.Now;
+
+                // Update BORROWING table
+                string updateBorrow = $@"
+            UPDATE BORROWING 
+            SET ReturnDate = GETDATE(), 
+                IsReturned = 1 
+            WHERE BorrowID = {borrowId};";
+
+                int rows1 = dbMan.ExecuteNonQuery(updateBorrow);
+
+                // Update Book Copy status back to Available
+                string updateCopy = $@"
+            UPDATE BOOK_COPIES 
+            SET Status = 'Available' 
+            WHERE CopyID = {copyId};";
+
+                int rows2 = dbMan.ExecuteNonQuery(updateCopy);
+
+                // Optional: Calculate Fine (if returned late)
+                int fineResult = CalculateFine(borrowId);
+
+                return (rows1 > 0 && rows2 > 0) ? 1 : 0;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+        }
+
+        // Helper method to calculate fine (called by ReturnBook)
+        private int CalculateFine(int borrowId)
+        {
+            try
+            {
+                string query = $@"
+            SELECT DATEDIFF(DAY, DueDate, GETDATE()) 
+            FROM BORROWING 
+            WHERE BorrowID = {borrowId} AND ReturnDate IS NOT NULL;";
+
+                object daysLateObj = dbMan.ExecuteScalar(query);
+
+                if (daysLateObj == null) return 0;
+
+                int daysLate = Convert.ToInt32(daysLateObj);
+
+                if (daysLate > 0)
+                {
+                    decimal fineAmount = daysLate * 5.00m; // 5 LE per day (you can change)
+
+                    string insertFine = $@"
+                INSERT INTO FINES (BorrowID, Amount, Status)
+                VALUES ({borrowId}, {fineAmount}, 'Unpaid');";
+
+                    dbMan.ExecuteNonQuery(insertFine);
+                    return 1;
+                }
+                return 0;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
 
     }
-
 }
